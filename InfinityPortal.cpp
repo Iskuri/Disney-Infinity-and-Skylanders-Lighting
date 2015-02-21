@@ -2,7 +2,7 @@
 
 InfinityPortal::InfinityPortal(int deviceId) {
 	
-	printf("Device id: %d\n",deviceId);
+	// printf("Device id: %d\n",deviceId);
 	deviceHandler = connect(deviceId);
 	
 	int retVal = 0;
@@ -23,6 +23,10 @@ InfinityPortal::InfinityPortal(int deviceId) {
 	}
 
 	activate();
+}
+
+InfinityPortal::InfinityPortal() {
+
 }
 
 libusb_device_handle* InfinityPortal::connect(int deviceId) {
@@ -67,6 +71,26 @@ void InfinityPortal::sendPacket(unsigned char* packet) {
 }
 
 void InfinityPortal::processReceivedPacket(unsigned char* packet) {
+
+	if(packet[0x00] == 0xab) {
+		// printf("Something was placed somewhere!\n");
+
+		// printf("Received: ");
+
+		// for(int i = 0 ; i < 32 ; i++) {
+		// 	printf("%x ",packet[i]);
+		// }
+		// printf("\n");
+
+		char platformSetting = packet[2];
+		char placedRemoved = packet[5];
+
+		if(placedRemoved == 0x00) {
+			printf("Tag placed on platform: %d\n",platformSetting);
+		} else {
+			printf("Tag removed from platform: %d\n",platformSetting);
+		}
+	}
 
 }
 

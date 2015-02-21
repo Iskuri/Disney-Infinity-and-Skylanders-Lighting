@@ -14,9 +14,9 @@
 
 class InfinityPortal {
 public:
+	InfinityPortal();
 	InfinityPortal(int deviceId);
 	virtual ~InfinityPortal();
-	void writeData(char* data, int dataLength);
 	libusb_device_handle* deviceHandler;
 	void setColour(char platform, char r, char g, char b);
 	void flashColour(char platform, char r, char g, char b);
