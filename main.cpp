@@ -91,7 +91,9 @@ int main(int argc, char** argv) {
 		for(j = 0 ; j < max(skylanderPortalCount,infinityPortalCount) ; j++) {
 
 			if(j < skylanderPortalCount) {
+				// printf("Doing %d\n",j);
 				skylanderPortals[j].setColour(random()%0x100,random()%0x100,random()%0x100);
+				// skylanderPortals[j].flashTrapLight();
 			}
 
 			if(j < infinityPortalCount) {

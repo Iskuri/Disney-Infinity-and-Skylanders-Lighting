@@ -96,20 +96,32 @@ unsigned char SkylandersPortal::getVersion() {
 
 void SkylandersPortal::writeData(char* data) {
 
-	int retVal;
+	int retVal = -1;
 	int reportNumber = data[0];
+	int failures = 0;
 
-	retVal = libusb_control_transfer(deviceHandler,
-			LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_OUT,
-			0x09,
-			(2 << 8) | reportNumber,
-			0,
-			(unsigned char *)data, 32,
-			100);
+	while(retVal < 0) {
+
+		retVal = libusb_control_transfer(deviceHandler,
+				LIBUSB_REQUEST_TYPE_CLASS|LIBUSB_RECIPIENT_INTERFACE|LIBUSB_ENDPOINT_OUT,
+				0x09,
+				(2 << 8) | reportNumber,
+				0,
+				(unsigned char *)data, 32,
+				50);
+
+		failures++;
+
+		// printf("Failed %d\n",failures);
+
+		if(failures > 100) {
+			break;
+		}
+	}
 
 	if(retVal < 0) {
-		printf("Returned val %d\n",retVal);
-		printf("Got error %s\n",libusb_error_name(retVal));
+		// printf("Returned val %d\n",retVal);
+		// printf("Got error %s\n",libusb_error_name(retVal));
 		// exit(1);
 	}
 }
@@ -647,9 +659,15 @@ void SkylandersPortal::flashTrapLight() {
 	int packetCount = 507;
 	int len = 0;
 
+	printf("Handling light\n");
+
 	int retVal = 0;
 	for(int i = 0 ; i < packetCount ; i++) {
-		retVal = libusb_bulk_transfer(deviceHandler,81,packets[i],32,&len,0);	
+
+		printf("Did loop %d\n", i);
+
+		retVal = libusb_bulk_transfer(deviceHandler,0x81,packets[i],32,&len,100);
+
 		if(retVal < 0) {
 			printf("Returned val %d\n",retVal);
 			printf("Got error %s\n",libusb_error_name(retVal));
