@@ -52,14 +52,10 @@ int main(int argc, char** argv) {
 
 			if(descriptor.idVendor == 0x0e6f && descriptor.idProduct == 0x0129) {
 
-					printf("Found infinity portal at %d\n",i);
-
 					infinityPortalIds[infinityPortalCount] = i;
 					infinityPortalCount++;
 
 			} else if(descriptor.idVendor == 0x1430 && descriptor.idProduct == 0x150) {
-
-					printf("Found skylander portal at %d\n",i);
 
 					skylanderPortalIds[skylanderPortalCount] = i;
 					skylanderPortalCount++;
@@ -76,38 +72,50 @@ int main(int argc, char** argv) {
 
 	int j;
 
+	int lightsCount = 0;
+
 	for(j = 0 ; j < infinityPortalCount ; j++) {
 		infinityPortals[j] = InfinityPortal(infinityPortalIds[j]);
+		lightsCount += 3;
 	}
 
 	for(j = 0 ; j < skylanderPortalCount ; j++) {
 		skylanderPortals[j] = SkylandersPortal(skylanderPortalIds[j]);
+		lightsCount += 1;
 	}
 
-	printf("Starting light show\n");
+	printf("lights %d\n",lightsCount);
 
-	while(true) {
+	// while(true) {
+	// 	for(j = 0 ; j < max(skylanderPortalCount,infinityPortalCount) ; j++) {
+	// 		if(j < skylanderPortalCount) {
+	// 			skylanderPortals[j].setColour(random()%0x100,random()%0x100,random()%0x100);
+	// 			// skylanderPortals[j].setLeftColour(random()%0x100,random()%0x100,random()%0x100);
+	// 			// skylanderPortals[j].setRightColour(random()%0x100,random()%0x100,random()%0x100);
+	// 			// skylanderPortals[j].flashTrapLight();
+	// 		}
 
-		for(j = 0 ; j < max(skylanderPortalCount,infinityPortalCount) ; j++) {
+	// 		if(j < infinityPortalCount) {
+	// 			for(int k = 0 ; k < 3 ; k++) {
+	// 				infinityPortals[j].setColour(k+1,random()%0x100,random()%0x100,random()%0x100);
+	// 			}
+	// 		}
+	// 	}
 
-			if(j < skylanderPortalCount) {
-				// printf("Doing %d\n",j);
-				skylanderPortals[j].setColour(random()%0x100,random()%0x100,random()%0x100);
-				// skylanderPortals[j].setLeftColour(random()%0x100,random()%0x100,random()%0x100);
-				// skylanderPortals[j].setRightColour(random()%0x100,random()%0x100,random()%0x100);
-				// skylanderPortals[j].flashTrapLight();
-			}
+	// 	usleep(100000);
+	// }
 
-			if(j < infinityPortalCount) {
-				for(int k = 0 ; k < 3 ; k++) {
-					infinityPortals[j].setColour(k+1,random()%0x100,random()%0x100,random()%0x100);
-				}
-			}
-		}
+    for (std::string line; std::getline(std::cin, line);) {
+    	int intVal = atoi(line.c_str());
+        // printf("Got line: %d\n",intVal);
 
-		usleep(100000);
-	}
+    	if(intVal > lightsCount) {
+    		continue;
+    	}
 
+    	skylanderPortals[intVal-1].setColour(random()%0x100,random()%0x100,random()%0x100);
+
+    }
 
 	printf("Done!\n");
 	return 0;
