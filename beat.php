@@ -43,19 +43,19 @@ $tempPlayout = tempnam("/tmp/","playOut");
 // proc_open(sprintf("play %s 2>&1 >/dev/null | tr  '\\r' '\\n' > %s &",$audioFile,$tempPlayout),array(0 => array("pipe", "r"),1 => array("pipe", "w")),$pipesAudio);
 $fifoFile = "resources/playfifo";
 
-posix_mkfifo($fifoFile, 777);
-$pFile = popen(sprintf("/usr/bin/play %s 2>&1 >/dev/null | tr  '\\r' '\\n' > %s &",$audioFile,$fifoFile),"r");
+// posix_mkfifo($fifoFile, 777);
+$pFile = popen(sprintf("/usr/bin/play %s 2>&1 >/dev/null | tr  '\\r' '\\n' &",$audioFile),"r");
 
-$fifo = fopen("playfifo","r");
+// $fifo = fopen("playfifo","r");
 
-echo "Getting ready!\n";
+// echo "Getting ready!\n";
 
-while(true) {
+// while(true) {
 	
-	if(strpos(fgets($fifo),"In:") !== false) {
-		break;
-	}
-}
+// 	if(strpos(fgets($fifo),"In:") !== false) {
+// 		break;
+// 	}
+// }
 
 echo "Starting the music!\n";
 
