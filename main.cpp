@@ -96,6 +96,8 @@ int main(int argc, char** argv) {
 				// skylanderPortals[j].setLeftColour(random()%0x100,random()%0x100,random()%0x100);
 				// skylanderPortals[j].setRightColour(random()%0x100,random()%0x100,random()%0x100);
 				// skylanderPortals[j].flashTrapLight();
+				// skylanderPortals[j].writeMaskerMind();
+				return 0;
 			}
 
 			if(j < infinityPortalCount) {

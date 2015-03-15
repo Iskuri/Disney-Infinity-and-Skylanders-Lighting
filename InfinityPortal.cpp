@@ -52,22 +52,64 @@ libusb_device_handle* InfinityPortal::connect(int deviceId) {
 	}
 }
 
+void InfinityPortal::getTagId() {
+
+	// ff 03 b4 26 00 dc 02 06 ff 00 00 ca 36 f1 2c 70 00 00 00 00 36 e7 3c 90 00 00 00 00 00 00 00 00
+	unsigned char* packet = new unsigned char[32];
+
+	packet[0] = 0xff;
+	packet[1] = 0x03;
+	packet[2] = 0xb4;
+	packet[3] = 0x26;
+	packet[4] = 0x00;
+	packet[5] = 0xdc;
+	packet[6] = 0x02;
+	packet[7] = 0x06;
+	packet[8] = 0xff;
+	packet[9] = 0x00;
+	packet[10] = 0x00;
+	packet[11] = 0xca;
+	packet[12] = 0x36;
+	packet[13] = 0xf1;
+	packet[14] = 0x2c;
+	packet[15] = 0x70;
+	packet[16] = 0x00;
+	packet[17] = 0x00;
+	packet[18] = 0x00;
+	packet[19] = 0x00;
+	packet[20] = 0x36;
+	packet[21] = 0xe7;
+	packet[22] = 0x3c;
+	packet[23] = 0x90;
+	packet[25] = 0x00;
+	packet[26] = 0x00;
+	packet[27] = 0x00;
+	packet[28] = 0x00;
+	packet[29] = 0x00;
+	packet[30] = 0x00;
+	packet[31] = 0x00;
+
+	sendPacket(packet);
+}
+
 void InfinityPortal::sendPacket(unsigned char* packet) {
 
 	int len;
-	int retVal;
+	int retVal = -1;
 
 	receivePackets();
 
-	retVal = libusb_bulk_transfer(deviceHandler,0x01,packet,32,&len,0);
-
-	if(retVal != 0) {
-		printf("Error code: %d\n",retVal);
-		printf("Error name: %s\n",libusb_error_name(retVal));
-		exit(1);
+	while(retVal < 0) {
+		retVal = libusb_bulk_transfer(deviceHandler,0x01,packet,32,&len,100);
+		receivePackets();
 	}
 
-	receivePackets();
+	// if(retVal != 0) {
+	// 	printf("Error code: %d\n",retVal);
+	// 	printf("Error name: %s\n",libusb_error_name(retVal));
+	// 	exit(1);
+	// }
+	
 }
 
 void InfinityPortal::processReceivedPacket(unsigned char* packet) {
@@ -90,6 +132,17 @@ void InfinityPortal::processReceivedPacket(unsigned char* packet) {
 		} else {
 			printf("Tag removed from platform: %d\n",platformSetting);
 		}
+
+		getTagId();
+
+	} else if(packet[0x00] == 0xaa && packet[0x01] == 0x09) {
+		printf("Got tag info\n");
+
+		// make print tag info!!!
+		for(int i = 10 ; i > 2 ; i--) {
+			printf("%x ",packet[i]);
+		}
+		printf("\n");
 	}
 
 }

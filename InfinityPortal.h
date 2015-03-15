@@ -22,6 +22,7 @@ public:
 	void flashColour(char platform, char r, char g, char b);
 	void fadeColour(char platform, char r, char g, char b);
 	void activate();
+	void getTagId();
 private:
 	void processReceivedPacket(unsigned char* packet);
 	void sendPacket(unsigned char* packet);

@@ -1,6 +1,6 @@
 <?php
 
-$lines = file_get_contents("flashlighttest");
+$lines = file_get_contents("maskerminddata");
 
 $lines = explode("\n",$lines);
 

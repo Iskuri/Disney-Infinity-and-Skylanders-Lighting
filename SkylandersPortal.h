@@ -28,6 +28,7 @@ public:
 	void reset();
 	void set();
 	void flashTrapLight();
+	void writeMaskerMind();
 private:
 	libusb_device_handle* deviceHandler;
 	void writeData(char* data);
